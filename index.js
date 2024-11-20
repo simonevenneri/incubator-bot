@@ -53,7 +53,7 @@ client.on('guildMemberAdd', async member => {
     try {
         // Crea la categoria personalizzata
         const category = await member.guild.channels.create({
-            name: member.user.username + " - Incubator Premium",
+            name: member.displayname + " - Incubator Premium",
             type: 4, // 4 = categoria
             permissionOverwrites: [
                 {
@@ -91,7 +91,7 @@ client.on('guildMemberAdd', async member => {
             // Se è il canale generale, invia il messaggio di benvenuto e i documenti
             if (channelName === 'generale') {
                 const welcomeMessage = `
-Ciao \${member.user.username}! 
+Ciao \${member.displayname}! 
 
 Benvenuto/a all'interno di Incubator! 🚀
 
