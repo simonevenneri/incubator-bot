@@ -25,10 +25,21 @@ client.once('ready', () => {
 // Gestione nuovo membro
 client.on('guildMemberAdd', async member => {
     try {
-        // Crea la categoria personalizzata
+        // Verifica se l'utente è già stato processato
+        const existingCategory = member.guild.channels.cache.find(
+            ch => ch.type === 4 && ch.name === `\${member.displayName} - Incubator Premium`
+        );
+
+        // Se esiste già una categoria per questo utente, non fare nulla
+        if (existingCategory) {
+            console.log(`Categoria già esistente per l'utente \${member.displayName}`);
+            return;
+        }
+
+        // Se non esiste, procedi con la creazione
         const category = await member.guild.channels.create({
             name: member.displayName + " - Incubator Premium",
-            type: 4, // 4 = categoria
+            type: 4,
             permissionOverwrites: [
                 {
                     id: member.guild.id,
