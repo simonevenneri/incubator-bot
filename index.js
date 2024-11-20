@@ -138,7 +138,7 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.
                         description: '🎯 Marketing Strategy'
                     },
                     {
-                        filename: 'Checklist per i clienti.pdf',
+                        filename: 'Checklist per i Clienti.pdf',
                         description: '✅ Checklist Operativa'
                     },
                     {
