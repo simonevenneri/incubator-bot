@@ -95,7 +95,7 @@ client.on('guildMemberAdd', async member => {
             const generalChannel = createdChannels['generale'];
             console.log('Invio messaggio di benvenuto nel canale generale');
 
-            const welcomeMessage = `Ciao ${member.user.name}! 
+            const welcomeMessage = `Ciao ${member.displayName}! 
 
 Benvenuto/a all'interno di Incubator! 🚀
 
