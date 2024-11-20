@@ -22,6 +22,25 @@ client.once('ready', () => {
     console.log('Bot ID: ' + client.user.id);
 });
 
+// Gestione eliminazione categoria
+client.on('channelDelete', async channel => {
+    try {
+        // Verifica se il canale eliminato è una categoria
+        if (channel.type === 4) {
+            // Trova tutti i canali che erano nella categoria
+            const childChannels = channel.guild.channels.cache.filter(ch => ch.parentId === channel.id);
+            
+            // Elimina tutti i canali che erano nella categoria
+            for (const [, childChannel] of childChannels) {
+                await childChannel.delete()
+                    .catch(error => console.error(`Errore nell'eliminazione del canale \${childChannel.name}:`, error));
+            }
+        }
+    } catch (error) {
+        console.error('Errore nella gestione eliminazione categoria:', error);
+    }
+});
+
 // Gestione nuovo membro
 client.on('guildMemberAdd', async member => {
     try {
