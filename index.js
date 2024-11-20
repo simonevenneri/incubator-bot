@@ -25,24 +25,20 @@ client.once('ready', () => {
 // Gestione nuovo membro
 client.on('guildMemberAdd', async member => {
     try {
-        // Usa il nickname se esiste, altrimenti usa lo username
-        const memberNickname = member.nickname || member.user.username;
-        console.log('Creazione canali per:', memberNickname);
-        
         // Verifica se l'utente è già stato processato
         const existingCategory = member.guild.channels.cache.find(
-            ch => ch.type === 4 && ch.name === member.displayName + " - Incubator Premium"
+            ch => ch.type === 4 && ch.name === `\${member.displayName} - Incubator Premium`
         );
 
         // Se esiste già una categoria per questo utente, non fare nulla
         if (existingCategory) {
-            console.log(`Categoria già esistente per l'utente \${memberNickname}`);
+            console.log(`Categoria già esistente per l'utente \${member.displayName}`);
             return;
         }
 
         // Se non esiste, procedi con la creazione
         const category = await member.guild.channels.create({
-            name: memberNickname + " - Incubator Premium",
+            name: member.displayName + " - Incubator Premium",
             type: 4,
             permissionOverwrites: [
                 {
@@ -56,46 +52,30 @@ client.on('guildMemberAdd', async member => {
             ]
         });
 
-        console.log('Categoria creata:', category.name);
-
         // Array dei canali da creare
         const channels = ['generale', 'documenti', 'marketing', 'editing'];
         
-        // Crea tutti i canali prima di procedere con l'invio dei messaggi
-        const createdChannels = {};
-        
         // Crea ogni canale nella categoria
         for (const channelName of channels) {
-            try {
-                console.log('Creazione canale:', channelName);
-                const channel = await member.guild.channels.create({
-                    name: channelName,
-                    type: 0,
-                    parent: category.id,
-                    permissionOverwrites: [
-                        {
-                            id: member.guild.id,
-                            deny: [PermissionFlagsBits.ViewChannel]
-                        },
-                        {
-                            id: member.user.id,
-                            allow: [PermissionFlagsBits.ViewChannel]
-                        }
-                    ]
-                });
-                createdChannels[channelName] = channel;
-                console.log('Canale creato:', channel.name);
-            } catch (error) {
-                console.error(`Errore nella creazione del canale \${channelName}:`, error);
-            }
-        }
+            const channel = await member.guild.channels.create({
+                name: channelName,
+                type: 0, // 0 = canale testuale
+                parent: category.id,
+                permissionOverwrites: [
+                    {
+                        id: member.guild.id,
+                        deny: [PermissionFlagsBits.ViewChannel]
+                    },
+                    {
+                        id: member.user.id,
+                        allow: [PermissionFlagsBits.ViewChannel]
+                    }
+                ]
+            });
 
-        // Se il canale generale è stato creato, invia il messaggio di benvenuto e i documenti
-        if (createdChannels['generale']) {
-            const generalChannel = createdChannels['generale'];
-            console.log('Invio messaggio di benvenuto nel canale generale');
-
-            const welcomeMessage = `Ciao ${member.displayName}! 
+            // Se è il canale generale, invia il messaggio di benvenuto e i documenti
+            if (channelName === 'generale') {
+                const welcomeMessage = `Ciao ${member.displayName}! 
 
 Benvenuto/a all'interno di Incubator! 🚀
 
@@ -125,57 +105,42 @@ Nel documento "Checklist" troverai i punti con le cose da fare :slight_smile:
 Ancora complimenti per la scelta fatta e benvenuto/a!
 
 Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
+                await channel.send(welcomeMessage);
 
-            await generalChannel.send(welcomeMessage);
-            console.log('Messaggio di benvenuto inviato');
+                // Carica i documenti
+                const documentsPath = path.join(__dirname, 'templates');
+                const documents = [
+                    {
+                        filename: 'Business Anamnesi Pre call.docx',
+                        description: '📋 Business Anamnesi Pre call'
+                    },
+                    {
+                        filename: 'Marketing Strategy.docx',
+                        description: '🎯 Marketing Strategy'
+                    },
+                    {
+                        filename: 'Checklist per i Clienti.pdf',
+                        description: '✅ Checklist Operativa'
+                    },
+                    {
+                        filename: 'Info utili.pdf',
+                        description: '📚 Info utili'
+                    }
+                ];
 
-            // Carica i documenti
-            const documentsPath = path.join(__dirname, 'templates');
-            console.log('Caricamento documenti da:', documentsPath);
-
-            const documents = [
-                {
-                    filename: 'Business Anamnesi Pre call.docx',
-                    description: '📋 Business Anamnesi Pre call'
-                },
-                {
-                    filename: 'Marketing Strategy.docx',
-                    description: '🎯 Marketing Strategy'
-                },
-                {
-                    filename: 'Checklist per i Clienti.pdf',
-                    description: '✅ Checklist Operativa'
-                },
-                {
-                    filename: 'Info utili.pdf',
-                    description: '📚 Info utili'
-                }
-            ];
-
-            // Invia ogni documento
-            for (const doc of documents) {
-                try {
+                // Invia ogni documento
+                for (const doc of documents) {
                     const filePath = path.join(documentsPath, doc.filename);
-                    console.log('Tentativo di invio file:', doc.filename);
-                    
                     if (fs.existsSync(filePath)) {
                         const attachment = new AttachmentBuilder(filePath);
-                        await generalChannel.send({
+                        await channel.send({
                             content: doc.description,
                             files: [attachment]
                         });
-                        console.log('File inviato:', doc.filename);
-                    } else {
-                        console.log('File non trovato:', doc.filename);
                     }
-                } catch (error) {
-                    console.error(`Errore nell'invio del file \${doc.filename}:`, error);
                 }
             }
-        } else {
-            console.error('Canale generale non creato correttamente');
         }
-
     } catch (error) {
         console.error('Errore nella creazione della struttura:', error);
     }
