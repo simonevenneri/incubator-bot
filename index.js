@@ -4,34 +4,6 @@ const token = process.env.DISCORD_TOKEN;
 const path = require('path');
 const fs = require('fs');
 
-// Aggiungi questo subito dopo la definizione di documentsPath
-const documentsPath = path.join(__dirname, 'templates');
-console.log('Checking templates directory...');
-console.log('Documents path:', documentsPath);
-try {
-    const files = fs.readdirSync(documentsPath);
-    console.log('Files in templates directory:', files);
-} catch (error) {
-    console.error('Error reading templates directory:', error);
-}
-
-// Modifica anche la parte di caricamento documenti
-for (const doc of documents) {
-    const filePath = path.join(documentsPath, doc.filename);
-    console.log('Trying to load file:', doc.filename);
-    console.log('Full path:', filePath);
-    if (fs.existsSync(filePath)) {
-        console.log('File exists:', doc.filename);
-        const attachment = new AttachmentBuilder(filePath);
-        await channel.send({
-            content: doc.description,
-            files: [attachment]
-        });
-    } else {
-        console.log('File not found:', doc.filename);
-    }
-}
-
 // Creazione del client Discord con gli intents necessari
 const client = new Client({
     intents: [
@@ -48,6 +20,32 @@ client.once('ready', () => {
     console.log('Server connessi: ' + client.guilds.cache.size);
     console.log('Nome del bot: ' + client.user.username);
     console.log('Bot ID: ' + client.user.id);
+
+    // Debug info per templates
+    const documentsPath = path.join(__dirname, 'templates');
+    console.log('=== DEBUG INFO ===');
+    console.log('Current directory:', __dirname);
+    console.log('Documents path:', documentsPath);
+
+    try {
+        console.log('Checking directory structure...');
+        console.log('Root files:', fs.readdirSync(__dirname));
+        
+        if (fs.existsSync(documentsPath)) {
+            console.log('Templates directory exists');
+            console.log('Templates files:', fs.readdirSync(documentsPath));
+        } else {
+            console.log('Templates directory not found');
+            console.log('Trying alternate path: /app/templates');
+            const altPath = '/app/templates';
+            if (fs.existsSync(altPath)) {
+                console.log('Found templates at alternate path');
+                console.log('Templates files:', fs.readdirSync(altPath));
+            }
+        }
+    } catch (error) {
+        console.error('Error checking directories:', error);
+    }
 });
 
 // Gestione nuovo membro
@@ -107,11 +105,11 @@ Gli step da fare per partire sono:
 
 Intanto ti presento il team!
 
-@882008995919958067 è il project manager che coordina il tutto e si occupa della parte strategica
-Io sono @1230826624061014087, il marketing manager e mi occupo di tutta la struttura marketing, quindi per qualsiasi domanda o dubbio riguardante le campagne pubblicitarie, funnel, contenuti organici etc chiedi pure a me
-@959471598149197854 è il sales manager, si occupa di tutta la parte di vendita
+<@882008995919958067> è il project manager che coordina il tutto e si occupa della parte strategica
+Io sono <@1230826624061014087>, il marketing manager e mi occupo di tutta la struttura marketing, quindi per qualsiasi domanda o dubbio riguardante le campagne pubblicitarie, funnel, contenuti organici etc chiedi pure a me
+<@959471598149197854> è il sales manager, si occupa di tutta la parte di vendita
 Per chiedere delle domande ti chiediamo ti taggarci nel gruppo apposito per non perderci alcun messaggio dato che abbiamo diversi gruppi. 
-@949255449985810472 è il video editor, si occupa di tutta la parte di editing degli script.
+<@949255449985810472> è il video editor, si occupa di tutta la parte di editing degli script.
 
 📌 Nel "generale" ci saranno le discussioni generali.
 📑 Nel "documenti" ci sarà l'inserimento di tutti i documenti che servono in modo da trovarli facilmente
@@ -128,6 +126,8 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.
 
                 // Carica i documenti
                 const documentsPath = path.join(__dirname, 'templates');
+                console.log('Loading documents from:', documentsPath);
+                
                 const documents = [
                     {
                         filename: 'Business Anamnesi Pre call.docx',
@@ -150,12 +150,20 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.
                 // Invia ogni documento
                 for (const doc of documents) {
                     const filePath = path.join(documentsPath, doc.filename);
+                    console.log(`Checking file: \${doc.filename}`);
+                    console.log(`Full path: \${filePath}`);
+                    console.log(`File exists: \${fs.existsSync(filePath)}`);
+                    
                     if (fs.existsSync(filePath)) {
+                        console.log(`Loading file: \${doc.filename}`);
                         const attachment = new AttachmentBuilder(filePath);
                         await channel.send({
                             content: doc.description,
                             files: [attachment]
                         });
+                        console.log(`File sent: \${doc.filename}`);
+                    } else {
+                        console.log(`File not found: \${doc.filename}`);
                     }
                 }
             }
@@ -171,4 +179,4 @@ client.on('error', error => {
 });
 
 // Login del bot
-client.login(token); 
+client.login(token);
