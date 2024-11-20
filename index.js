@@ -4,6 +4,34 @@ const token = process.env.DISCORD_TOKEN;
 const path = require('path');
 const fs = require('fs');
 
+// Aggiungi questo subito dopo la definizione di documentsPath
+const documentsPath = path.join(__dirname, 'templates');
+console.log('Checking templates directory...');
+console.log('Documents path:', documentsPath);
+try {
+    const files = fs.readdirSync(documentsPath);
+    console.log('Files in templates directory:', files);
+} catch (error) {
+    console.error('Error reading templates directory:', error);
+}
+
+// Modifica anche la parte di caricamento documenti
+for (const doc of documents) {
+    const filePath = path.join(documentsPath, doc.filename);
+    console.log('Trying to load file:', doc.filename);
+    console.log('Full path:', filePath);
+    if (fs.existsSync(filePath)) {
+        console.log('File exists:', doc.filename);
+        const attachment = new AttachmentBuilder(filePath);
+        await channel.send({
+            content: doc.description,
+            files: [attachment]
+        });
+    } else {
+        console.log('File not found:', doc.filename);
+    }
+}
+
 // Creazione del client Discord con gli intents necessari
 const client = new Client({
     intents: [
