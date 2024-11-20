@@ -27,7 +27,7 @@ client.on('guildMemberAdd', async member => {
     try {
         // Crea la categoria personalizzata
         const category = await member.guild.channels.create({
-            name: `\${member.user.username} - Incubator Premium`,
+            name: member.user.username + " - Incubator Premium",
             type: 4, // 4 = categoria
             permissionOverwrites: [
                 {
@@ -79,11 +79,11 @@ Gli step da fare per partire sono:
 
 Intanto ti presento il team!
 
-@amedeo1840 è il project manager che coordina il tutto e si occupa della parte strategica
-Io sono @simone.venneri, il marketing manager e mi occupo di tutta la struttura marketing, quindi per qualsiasi domanda o dubbio riguardante le campagne pubblicitarie, funnel, contenuti organici etc chiedi pure a me
-@luca_testa è il sales manager, si occupa di tutta la parte di vendita
+@882008995919958067 è il project manager che coordina il tutto e si occupa della parte strategica
+Io sono @1230826624061014087, il marketing manager e mi occupo di tutta la struttura marketing, quindi per qualsiasi domanda o dubbio riguardante le campagne pubblicitarie, funnel, contenuti organici etc chiedi pure a me
+@959471598149197854 è il sales manager, si occupa di tutta la parte di vendita
 Per chiedere delle domande ti chiediamo ti taggarci nel gruppo apposito per non perderci alcun messaggio dato che abbiamo diversi gruppi. 
-@picco6026 è il video editor, si occupa di tutta la parte di editing degli script.
+@949255449985810472 è il video editor, si occupa di tutta la parte di editing degli script.
 
 📌 Nel "generale" ci saranno le discussioni generali.
 📑 Nel "documenti" ci sarà l'inserimento di tutti i documenti che servono in modo da trovarli facilmente
