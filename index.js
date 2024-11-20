@@ -20,32 +20,6 @@ client.once('ready', () => {
     console.log('Server connessi: ' + client.guilds.cache.size);
     console.log('Nome del bot: ' + client.user.username);
     console.log('Bot ID: ' + client.user.id);
-
-    // Debug info per templates
-    const documentsPath = path.join(__dirname, 'templates');
-    console.log('=== DEBUG INFO ===');
-    console.log('Current directory:', __dirname);
-    console.log('Documents path:', documentsPath);
-
-    try {
-        console.log('Checking directory structure...');
-        console.log('Root files:', fs.readdirSync(__dirname));
-        
-        if (fs.existsSync(documentsPath)) {
-            console.log('Templates directory exists');
-            console.log('Templates files:', fs.readdirSync(documentsPath));
-        } else {
-            console.log('Templates directory not found');
-            console.log('Trying alternate path: /app/templates');
-            const altPath = '/app/templates';
-            if (fs.existsSync(altPath)) {
-                console.log('Found templates at alternate path');
-                console.log('Templates files:', fs.readdirSync(altPath));
-            }
-        }
-    } catch (error) {
-        console.error('Error checking directories:', error);
-    }
 });
 
 // Gestione nuovo membro
@@ -53,7 +27,7 @@ client.on('guildMemberAdd', async member => {
     try {
         // Crea la categoria personalizzata
         const category = await member.guild.channels.create({
-            name: member.displayName + " - Incubator Premium",  // Cambiato qui
+            name: member.displayName + " - Incubator Premium",
             type: 4, // 4 = categoria
             permissionOverwrites: [
                 {
@@ -90,8 +64,7 @@ client.on('guildMemberAdd', async member => {
 
             // Se è il canale generale, invia il messaggio di benvenuto e i documenti
             if (channelName === 'generale') {
-                const welcomeMessage = `
-Ciao ${member.displayName}! 
+                const welcomeMessage = `Ciao ${member.displayName}! 
 
 Benvenuto/a all'interno di Incubator! 🚀
 
@@ -120,14 +93,11 @@ Nel documento "Checklist" troverai i punti con le cose da fare :slight_smile:
 
 Ancora complimenti per la scelta fatta e benvenuto/a!
 
-Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.
-`;
+Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
                 await channel.send(welcomeMessage);
 
                 // Carica i documenti
                 const documentsPath = path.join(__dirname, 'templates');
-                console.log('Loading documents from:', documentsPath);
-                
                 const documents = [
                     {
                         filename: 'Business Anamnesi Pre call.docx',
@@ -150,20 +120,12 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.
                 // Invia ogni documento
                 for (const doc of documents) {
                     const filePath = path.join(documentsPath, doc.filename);
-                    console.log(`Checking file: \${doc.filename}`);
-                    console.log(`Full path: \${filePath}`);
-                    console.log(`File exists: \${fs.existsSync(filePath)}`);
-                    
                     if (fs.existsSync(filePath)) {
-                        console.log(`Loading file: \${doc.filename}`);
                         const attachment = new AttachmentBuilder(filePath);
                         await channel.send({
                             content: doc.description,
                             files: [attachment]
                         });
-                        console.log(`File sent: \${doc.filename}`);
-                    } else {
-                        console.log(`File not found: \${doc.filename}`);
                     }
                 }
             }
