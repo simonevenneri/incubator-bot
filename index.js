@@ -25,20 +25,23 @@ client.once('ready', () => {
 // Gestione nuovo membro
 client.on('guildMemberAdd', async member => {
     try {
+        // Usa il nickname se esiste, altrimenti usa il displayName
+        const memberNickname = member.nickname || member.user.displayName;
+        
         // Verifica se l'utente è già stato processato
         const existingCategory = member.guild.channels.cache.find(
-            ch => ch.type === 4 && ch.name === `\${member.displayName} - Incubator Premium`
+            ch => ch.type === 4 && ch.name === `\${memberNickname} - Incubator Premium`
         );
 
         // Se esiste già una categoria per questo utente, non fare nulla
         if (existingCategory) {
-            console.log(`Categoria già esistente per l'utente \${member.displayName}`);
+            console.log(`Categoria già esistente per l'utente \${memberNickname}`);
             return;
         }
 
         // Se non esiste, procedi con la creazione
         const category = await member.guild.channels.create({
-            name: member.displayName + " - Incubator Premium",
+            name: memberNickname + " - Incubator Premium",
             type: 4,
             permissionOverwrites: [
                 {
@@ -75,7 +78,7 @@ client.on('guildMemberAdd', async member => {
 
             // Se è il canale generale, invia il messaggio di benvenuto e i documenti
             if (channelName === 'generale') {
-                const welcomeMessage = `Ciao ${member.displayName}! 
+                const welcomeMessage = `Ciao ${user.displayName}! 
 
 Benvenuto/a all'interno di Incubator! 🚀
 
