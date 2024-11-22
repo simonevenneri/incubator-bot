@@ -110,9 +110,10 @@ Intanto ti presento il team!
 
 <@882008995919958067> è il project manager che coordina il tutto e si occupa della parte strategica
 Io sono <@1230826624061014087>, il marketing manager e mi occupo di tutta la struttura marketing, quindi per qualsiasi domanda o dubbio riguardante le campagne pubblicitarie, funnel, contenuti organici etc chiedi pure a me
-<@959471598149197854> è il sales manager, si occupa di tutta la parte di vendita
-Per chiedere delle domande ti chiediamo ti taggarci nel gruppo apposito per non perderci alcun messaggio dato che abbiamo diversi gruppi. 
+<@959471598149197854> è il sales manager, si occupa di tutta la parte di vendita 
 <@949255449985810472> è il video editor, si occupa di tutta la parte di editing degli script.
+
+Per chiedere delle domande ti chiediamo ti taggarci nel gruppo apposito per non perderci alcun messaggio dato che abbiamo diversi gruppi.
 
 📌 Nel "generale" ci saranno le discussioni generali.
 📑 Nel "documenti" ci sarà l'inserimento di tutti i documenti che servono in modo da trovarli facilmente
