@@ -66,6 +66,10 @@ client.on('guildMemberAdd', async member => {
         const channels = ['generale', 'documenti', 'marketing', 'editing', 'vendita'];
         console.log('Canali da creare:', channels);
         
+        // Definisci documentsPath qui, fuori dai blocchi if
+        const documentsPath = path.join(__dirname, 'templates');
+        console.log('Path documenti globale:', documentsPath);
+        
         // Crea ogni canale nella categoria
         for (const channelName of channels) {
             try {
@@ -92,7 +96,7 @@ client.on('guildMemberAdd', async member => {
                     console.log('Invio messaggi nel canale generale');
                     
                     // Prima parte del messaggio
-                    const welcomeMessage1 = `Ciao \${member.displayName}! 
+                    const welcomeMessage1 = `Ciao ${member.displayName}! 
 
 Benvenuto/a all'interno di Incubator! 🚀
 
@@ -102,8 +106,9 @@ Gli step da fare per partire sono:
 1. Compilare il questionario "Business Anamnesi PreCall che trovi qui sotto prima della call di onboarding ed inserirlo nel canale ⁠documenti;
 2. Compilare il questionario "Marketing Strategy" che trovi qui sotto ed inserirlo nel canale documenti;
 ⁠3. Prenotare tramite questo link la call di onboarding direttamente con Amedeo: https://amedeopoletti.com/onboardingamedeo;
-4. Link al calendario di Simone: https://amedeopoletti.com/coach-dfy;
-5. Link al calendario di Luca: https://amedeopoletti.com/vendita-dfy;`;
+
+Info: Link al calendario di Simone: https://amedeopoletti.com/coach-dfy;
+Info: Link al calendario di Luca: https://amedeopoletti.com/vendita-dfy;`;
 
                     // Seconda parte del messaggio
                     const welcomeMessage2 = `Intanto ti presento il team!
@@ -137,7 +142,6 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
 
                     // Carica i documenti
                     console.log('Inizio caricamento documenti nel canale generale');
-                    const documentsPath = path.join(__dirname, 'templates');
                     console.log('Path documenti:', documentsPath);
                     console.log('Contenuto cartella:', fs.readdirSync(documentsPath));
 
@@ -192,7 +196,7 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
                 if (channelName === 'marketing') {
                     try {
                         console.log('⭐ Inizio configurazione canale marketing');
-                        const marketingMessage = `📊 Benvenuto nel canale Marketing di Incubator!
+                        const marketingMessage = `📊 Benvenuto/a nel canale Marketing!
 
 🎯 Per ottimizzare le tue campagne e monitorare i risultati, è fondamentale compilare il file KPI seguendo questa video guida:
 👉 https://www.loom.com/share/49488834370d44bd83dcafe5e5afdc39?sid=9c3990ab-9bcc-4232-a8a8-62cb67088b4a
@@ -231,6 +235,7 @@ Non esitare a contattare <@1230826624061014087>, il nostro Marketing Manager. Ri
                             console.log('✅ KPI Template inviato con successo');
                         } else {
                             console.error('❌ File KPI non trovato:', kpiFilePath);
+                            console.error('Files disponibili:', fs.readdirSync(documentsPath));
                         }
                     } catch (error) {
                         console.error('❌ Errore nel canale marketing:', error);
@@ -241,17 +246,17 @@ Non esitare a contattare <@1230826624061014087>, il nostro Marketing Manager. Ri
                 if (channelName === 'vendita') {
                     try {
                         console.log('⭐ Inizio configurazione canale vendita');
-                        const salesMessage = `🎯 Ciao a tutti e benvenuti nel canale Vendite di Incubator!
+                        const salesMessage = `🎯 Benvenuto/a nel canale Vendite!
 
-Mi chiamo Luca Testa e sono il Sales Manager del team. Questo canale è stato creato per supportarvi in ogni aspetto del processo di vendita: dall'impostazione delle chiamate di vendita e di setting, fino all'utilizzo del CRM per analizzare i dati e migliorare le vostre performance.
+Mi chiamo Luca Testa e sono il Sales Manager del team. Questo canale è stato creato per supportarti in ogni aspetto del processo di vendita: dall'impostazione delle chiamate di vendita e di setting, fino all'utilizzo del CRM per analizzare i dati e migliorare le tue performance.
 
-Inoltre, organizzeremo sessioni live di role play e di Q&A per aiutarvi ad approcciare la vendita in maniera efficace e risolutiva. In questo canale, dovrete caricare le chiamate che farete, in modo che possano essere analizzate da me e dal team per fornirvi feedback utili. Vi darò istruzioni da seguire che ci permetteranno di migliorare le vostre performance e le vostre offerte.  
+Inoltre, organizzeremo sessioni live di role play e di Q&A per aiutarti ad approcciare la vendita in maniera efficace e risolutiva. In questo canale, dovrai caricare le chiamate che farai, in modo che possano essere analizzate da me e dal team per fornirti feedback utili. Ti darò istruzioni da seguire che ci permetteranno di migliorare le tue performance e le tue offerte.  
 
-Sentitevi liberi di fare domande, condividere le vostre esperienze o chiedere consigli. Siamo qui per aiutarvi a crescere e raggiungere i vostri obiettivi di vendita insieme! 💪
+Sentiti libero/a di fare domande, condividere le tue esperienze o chiedere consigli. Siamo qui per aiutarti a crescere e raggiungere i tuoi obiettivi di vendita insieme!
 
-Di seguito trovate la roadmap con tutti i punti da seguire per implementare e migliorare i vostri processi di vendita.
+Di seguito trovi la roadmap con tutti i punti da seguire per implementare e migliorare i tuoi processi di vendita.
 
-Non esitate a taggarmi per qualsiasi dubbio o domanda. Ancora una volta, benvenuti a bordo e complimenti per la scelta fatta! 🚀
+Non esitare a taggarmi per qualsiasi dubbio o domanda. Ancora una volta, benvenuto/a a bordo e complimenti per la scelta fatta!
 
 Luca Testa`;
                         
@@ -276,6 +281,7 @@ Luca Testa`;
                             console.log('✅ Roadmap Vendite inviata con successo');
                         } else {
                             console.error('❌ File Roadmap non trovato:', salesRoadmapPath);
+                            console.error('Files disponibili:', fs.readdirSync(documentsPath));
                         }
                     } catch (error) {
                         console.error('❌ Errore nel canale vendita:', error);
@@ -304,3 +310,4 @@ client.on('error', error => {
 
 // Login del bot
 client.login(token);
+
