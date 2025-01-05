@@ -74,7 +74,8 @@ client.on('guildMemberAdd', async member => {
 
             // Se è il canale generale, invia il messaggio di benvenuto e i documenti
             if (channelName === 'generale') {
-                const welcomeMessage = `Ciao \${member.displayName}! 
+                // Prima parte del messaggio
+                const welcomeMessage1 = `Ciao \${member.displayName}! 
 
 Benvenuto/a all'interno di Incubator! 🚀
 
@@ -84,20 +85,22 @@ Gli step da fare per partire sono:
 1. Compilare il questionario "Business Anamnesi PreCall che trovi qui sotto prima della call di onboarding ed inserirlo nel canale ⁠documenti;
 2. Compilare il questionario "Marketing Strategy" che trovi qui sotto ed inserirlo nel canale documenti;
 ⁠3. Prenotare tramite questo link la call di onboarding direttamente con Amedeo: https://amedeopoletti.com/onboardingamedeo;
-4. Link al calendario di Simone: https://amedeopoletti.com/coach-dfy;
-5. Link al calendario di Luca: https://amedeopoletti.com/vendita-dfy;
 
+Info: Link al calendario di Simone: https://amedeopoletti.com/coach-dfy;
+Info: Link al calendario di Luca: https://amedeopoletti.com/vendita-dfy;`;
 
-Intanto ti presento il team!
+                // Seconda parte del messaggio
+                const welcomeMessage2 = `Intanto ti presento il team!
 
 <@882008995919958067> è il project manager che coordina il tutto e si occupa della parte strategica
 Io sono <@1230826624061014087>, il marketing manager e mi occupo di tutta la struttura marketing, quindi per qualsiasi domanda o dubbio riguardante le campagne pubblicitarie, funnel, contenuti organici etc chiedi pure a me
 <@959471598149197854> è il sales manager, si occupa di tutta la parte di vendita
 <@949255449985810472> è il video editor, si occupa di tutta la parte di editing degli script.
 
-**Per chiedere delle domande ti chiediamo ti taggarci nel gruppo apposito per non perderci alcun messaggio dato che abbiamo diversi gruppi.** 
+**Per chiedere delle domande ti chiediamo ti taggarci nel gruppo apposito per non perderci alcun messaggio dato che abbiamo diversi gruppi.**`;
 
-📌 Nel "generale" ci saranno le discussioni generali.
+                // Terza parte del messaggio
+                const welcomeMessage3 = `📌 Nel "generale" ci saranno le discussioni generali.
 📑 Nel "documenti" ci sarà l'inserimento di tutti i documenti che servono in modo da trovarli facilmente
 📊 Nel "marketing" invece è il canale per quanto riguarda le Ads ed i vari Script
 🎬 Nel "editing" inserirai gli script registrati come descritto nel documento "Info utili"
@@ -105,11 +108,14 @@ Io sono <@1230826624061014087>, il marketing manager e mi occupo di tutta la str
 
 **Leggi bene tutti i documenti, ci sono molte info importanti. Per iniziare leggi la Roadmap.** :slight_smile:
 
-
 Ancora complimenti per la scelta fatta e benvenuto/a!
 
 Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
-                await channel.send(welcomeMessage);
+
+                // Invia i messaggi uno dopo l'altro
+                await channel.send(welcomeMessage1);
+                await channel.send(welcomeMessage2);
+                await channel.send(welcomeMessage3);
                 // Carica i documenti
                 const documentsPath = path.join(__dirname, 'templates');
                 const documents = [
@@ -150,9 +156,9 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
 
             // Se è il canale marketing, invia il messaggio e il file KPI
             if (channelName === 'marketing') {
-                const marketingMessage = `📊 Benvenuto nel canale Marketing!
+                const marketingMessage = `📊 Benvenuto nel canale Marketing di Incubator!
 
-🎯 Per ottimizzare le tue campagne e monitorare i risultati, è **fondamentale** compilare il file KPI seguendo questa video guida:
+🎯 Per ottimizzare le tue campagne e monitorare i risultati, è fondamentale compilare il file KPI seguendo questa video guida:
 👉 https://www.loom.com/share/49488834370d44bd83dcafe5e5afdc39?sid=9c3990ab-9bcc-4232-a8a8-62cb67088b4a
 
 📈 Il file KPI è uno strumento essenziale che ci permette di:
@@ -161,7 +167,7 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
 • Ottimizzare il tuo processo di acquisizione clienti
 • Massimizzare il ritorno sul tuo investimento pubblicitario
 
-⚠️**Ti raccomandiamo di salvare sia il file che il link immediatamente, sono strumenti fondamentali per il tuo successo.**
+⚠️ Ti raccomandiamo di salvare sia il file che il link immediatamente, sono strumenti fondamentali per il tuo successo.
 
 ❓ Hai domande o bisogno di supporto?
 Non esitare a contattare <@1230826624061014087>, il nostro Marketing Manager. Ricordati sempre di taggarlo nei messaggi per ricevere assistenza immediata.
@@ -182,24 +188,24 @@ Non esitare a contattare <@1230826624061014087>, il nostro Marketing Manager. Ri
             }
             // Se è il canale vendita, invia il messaggio specifico
             if (channelName === 'vendita') {
-                const salesMessage = `🎯 Benvenuto/a nel canale Vendite!
+                const salesMessage = `🎯 Ciao a tutti e benvenuti nel canale Vendite di Incubator!
 
-Mi chiamo Luca Testa e sono il Sales Manager del team. Questo canale è stato creato per supportarti in ogni aspetto del processo di vendita: dall'impostazione delle chiamate di vendita e di setting, fino all'utilizzo del CRM per analizzare i dati e migliorare le tue performance.
+Mi chiamo Luca Testa e sono il Sales Manager del team. Questo canale è stato creato per supportarvi in ogni aspetto del processo di vendita: dall'impostazione delle chiamate di vendita e di setting, fino all'utilizzo del CRM per analizzare i dati e migliorare le vostre performance.
 
-Inoltre, organizzeremo sessioni live di role play e di Q&A per aiutarti ad approcciare la vendita in maniera efficace e risolutiva. In questo canale, dovrai caricare le chiamate che farai, in modo che possano essere analizzate da me e dal team per fornirti feedback utili. Ti darò istruzioni da seguire che ci permetteranno di migliorare le tue performance e le tue offerte.  
+Inoltre, organizzeremo sessioni live di role play e di Q&A per aiutarvi ad approcciare la vendita in maniera efficace e risolutiva. In questo canale, dovrete caricare le chiamate che farete, in modo che possano essere analizzate da me e dal team per fornirvi feedback utili. Vi darò istruzioni da seguire che ci permetteranno di migliorare le vostre performance e le vostre offerte.  
 
-Sentiti libero/a di fare domande, condividere le tue esperienze o chiedere consigli. Siamo qui per aiutarti a crescere e raggiungere i tuoi obiettivi di vendita insieme!
+Sentitevi liberi di fare domande, condividere le vostre esperienze o chiedere consigli. Siamo qui per aiutarvi a crescere e raggiungere i vostri obiettivi di vendita insieme! 💪
 
-Di seguito trovi la roadmap con tutti i punti da seguire per implementare e migliorare i tuoi processi di vendita.
+Di seguito trovate la roadmap con tutti i punti da seguire per implementare e migliorare i vostri processi di vendita.
 
-Non esitare a taggarmi per qualsiasi dubbio o domanda. Ancora una volta, benvenuto/a a bordo e complimenti per la scelta fatta!
+Non esitate a taggarmi per qualsiasi dubbio o domanda. Ancora una volta, benvenuti a bordo e complimenti per la scelta fatta! 🚀
 
 Luca Testa`;
                 
                 await channel.send(salesMessage);
 
                 // Invia la Roadmap Vendite
-                const salesRoadmapPath = path.join(__dirname, 'templates', 'Roadmap Vendite Incubator.pdf');
+                const salesRoadmapPath = path.join(documentsPath, 'Roadmap Vendite Incubator.pdf');
                 if (fs.existsSync(salesRoadmapPath)) {
                     const attachment = new AttachmentBuilder(salesRoadmapPath);
                     await channel.send({
