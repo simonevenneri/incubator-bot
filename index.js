@@ -25,6 +25,8 @@ client.once('ready', () => {
 // Gestione nuovo membro
 client.on('guildMemberAdd', async member => {
     try {
+        console.log('Nuovo membro aggiunto:', member.displayName);
+
         // Verifica se l'utente è già stato processato
         const existingCategory = member.guild.channels.cache.find(
             ch => ch.type === 4 && ch.name === `\${member.displayName} - Incubator Premium`
@@ -51,11 +53,16 @@ client.on('guildMemberAdd', async member => {
                 }
             ]
         });
+
+        console.log('Categoria creata:', category.name);
         // Array dei canali da creare
         const channels = ['generale', 'documenti', 'marketing', 'editing', 'vendita'];
+        console.log('Canali da creare:', channels);
         
         // Crea ogni canale nella categoria
         for (const channelName of channels) {
+            console.log('Tentativo creazione canale:', channelName);
+            
             const channel = await member.guild.channels.create({
                 name: channelName,
                 type: 0, // 0 = canale testuale
@@ -72,10 +79,14 @@ client.on('guildMemberAdd', async member => {
                 ]
             });
 
+            console.log('Canale creato:', channel.name);
+
             // Se è il canale generale, invia il messaggio di benvenuto e i documenti
             if (channelName === 'generale') {
+                console.log('Invio messaggi nel canale generale');
+                
                 // Prima parte del messaggio
-                const welcomeMessage1 = `Ciao \${member.displayName}! 
+                const welcomeMessage1 = `Ciao \${member}! 
 
 Benvenuto/a all'interno di Incubator! 🚀
 
@@ -117,6 +128,7 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
                 await channel.send(welcomeMessage2);
                 await channel.send(welcomeMessage3);
                 // Carica i documenti
+                console.log('Inizio caricamento documenti nel canale generale');
                 const documentsPath = path.join(__dirname, 'templates');
                 const documents = [
                     {
@@ -144,19 +156,25 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
                 // Invia ogni documento
                 for (const doc of documents) {
                     const filePath = path.join(documentsPath, doc.filename);
+                    console.log('Tentativo invio documento:', doc.filename);
+                    console.log('Percorso file:', filePath);
+                    console.log('File esiste:', fs.existsSync(filePath));
+                    
                     if (fs.existsSync(filePath)) {
                         const attachment = new AttachmentBuilder(filePath);
                         await channel.send({
                             content: doc.description,
                             files: [attachment]
                         });
+                        console.log('Documento inviato:', doc.filename);
                     }
                 }
             }
 
             // Se è il canale marketing, invia il messaggio e il file KPI
             if (channelName === 'marketing') {
-                const marketingMessage = `📊 Benvenuto nel canale Marketing di Incubator!
+                console.log('Configurazione canale marketing');
+                const marketingMessage = `📊 Benvenuto nel canale Marketing!
 
 🎯 Per ottimizzare le tue campagne e monitorare i risultati, è fondamentale compilare il file KPI seguendo questa video guida:
 👉 https://www.loom.com/share/49488834370d44bd83dcafe5e5afdc39?sid=9c3990ab-9bcc-4232-a8a8-62cb67088b4a
@@ -178,51 +196,67 @@ Non esitare a contattare <@1230826624061014087>, il nostro Marketing Manager. Ri
 
                 // Invia il file KPI
                 const kpiFilePath = path.join(documentsPath, 'KPI Template.xlsx');
+                console.log('Tentativo invio KPI Template');
+                console.log('Percorso file KPI:', kpiFilePath);
+                console.log('File KPI esiste:', fs.existsSync(kpiFilePath));
+                
                 if (fs.existsSync(kpiFilePath)) {
                     const attachment = new AttachmentBuilder(kpiFilePath);
                     await channel.send({
                         content: '📊 KPI Template',
                         files: [attachment]
                     });
+                    console.log('KPI Template inviato con successo');
                 }
             }
             // Se è il canale vendita, invia il messaggio specifico
             if (channelName === 'vendita') {
-                const salesMessage = `🎯 Ciao a tutti e benvenuti nel canale Vendite di Incubator!
+                console.log('Configurazione canale vendita');
+                const salesMessage = `🎯 Benvenuto nel canale Vendite!
 
-Mi chiamo Luca Testa e sono il Sales Manager del team. Questo canale è stato creato per supportarvi in ogni aspetto del processo di vendita: dall'impostazione delle chiamate di vendita e di setting, fino all'utilizzo del CRM per analizzare i dati e migliorare le vostre performance.
+Mi chiamo Luca Testa e sono il Sales Manager del team. Questo canale è stato creato per supportarti in ogni aspetto del processo di vendita: dall'impostazione delle chiamate di vendita e di setting, fino all'utilizzo del CRM per analizzare i dati e migliorare le tue performance.
 
-Inoltre, organizzeremo sessioni live di role play e di Q&A per aiutarvi ad approcciare la vendita in maniera efficace e risolutiva. In questo canale, dovrete caricare le chiamate che farete, in modo che possano essere analizzate da me e dal team per fornirvi feedback utili. Vi darò istruzioni da seguire che ci permetteranno di migliorare le vostre performance e le vostre offerte.  
+Inoltre, organizzeremo sessioni live di role play e di Q&A per aiutarti ad approcciare la vendita in maniera efficace e risolutiva. In questo canale, dovrai caricare le chiamate che farai, in modo che possano essere analizzate da me e dal team per fornirti feedback utili. Ti darò istruzioni da seguire che ci permetteranno di migliorare le tue performance e le tue offerte.  
 
-Sentitevi liberi di fare domande, condividere le vostre esperienze o chiedere consigli. Siamo qui per aiutarvi a crescere e raggiungere i vostri obiettivi di vendita insieme! 💪
+Sentiti libero/a di fare domande, condividere le tue esperienze o chiedere consigli. Siamo qui per aiutarti a crescere e raggiungere i tuoi obiettivi di vendita insieme!
 
-Di seguito trovate la roadmap con tutti i punti da seguire per implementare e migliorare i vostri processi di vendita.
+Di seguito trovi la roadmap con tutti i punti da seguire per implementare e migliorare i tuoi processi di vendita.
 
-Non esitate a taggarmi per qualsiasi dubbio o domanda. Ancora una volta, benvenuti a bordo e complimenti per la scelta fatta! 🚀
+Non esitare a taggarmi per qualsiasi dubbio o domanda. Ancora una volta, benvenuto/a a bordo e complimenti per la scelta fatta!
 
 Luca Testa`;
                 
                 await channel.send(salesMessage);
+                console.log('Messaggio vendita inviato');
 
                 // Invia la Roadmap Vendite
                 const salesRoadmapPath = path.join(documentsPath, 'Roadmap Vendite Incubator.pdf');
+                console.log('Tentativo invio Roadmap Vendite');
+                console.log('Percorso Roadmap Vendite:', salesRoadmapPath);
+                console.log('File Roadmap Vendite esiste:', fs.existsSync(salesRoadmapPath));
+                
                 if (fs.existsSync(salesRoadmapPath)) {
                     const attachment = new AttachmentBuilder(salesRoadmapPath);
                     await channel.send({
                         content: '📊 Roadmap Vendite Incubator',
                         files: [attachment]
                     });
+                    console.log('Roadmap Vendite inviata con successo');
                 }
             }
         }
     } catch (error) {
         console.error('Errore nella creazione della struttura:', error);
+        console.error('Dettagli errore:', error.message);
+        if (error.code) console.error('Codice errore:', error.code);
     }
 });
 
 // Gestione errori
 client.on('error', error => {
     console.error('Errore del bot:', error);
+    console.error('Dettagli errore:', error.message);
+    if (error.code) console.error('Codice errore:', error.code);
 });
 
 // Login del bot
