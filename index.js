@@ -20,12 +20,19 @@ client.once('ready', () => {
     console.log('Server connessi: ' + client.guilds.cache.size);
     console.log('Nome del bot: ' + client.user.username);
     console.log('Bot ID: ' + client.user.id);
+    
+    // Test iniziale dei percorsi dei file
+    const documentsPath = path.join(__dirname, 'templates');
+    console.log('Path base:', __dirname);
+    console.log('Documents path:', documentsPath);
+    console.log('Contenuto cartella templates:', fs.readdirSync(documentsPath));
 });
 
 // Gestione nuovo membro
 client.on('guildMemberAdd', async member => {
     try {
         console.log('Nuovo membro aggiunto:', member.displayName);
+        console.log('Member ID:', member.id);
 
         // Verifica se l'utente è già stato processato
         const existingCategory = member.guild.channels.cache.find(
@@ -80,12 +87,28 @@ client.on('guildMemberAdd', async member => {
                 });
                 console.log(`Canale creato con successo: \${channelName}`);
 
+                // Test file upload per ogni canale
+                try {
+                    const testFilePath = path.join(__dirname, 'templates', 'test.txt');
+                    console.log(`Test upload in \${channelName}. File esiste:`, fs.existsSync(testFilePath));
+                    if (fs.existsSync(testFilePath)) {
+                        const testAttachment = new AttachmentBuilder(testFilePath);
+                        await channel.send({
+                            content: `🧪 Test file upload in \${channelName}`,
+                            files: [testAttachment]
+                        });
+                        console.log(`Test file caricato con successo in \${channelName}`);
+                    }
+                } catch (error) {
+                    console.error(`Errore test upload in \${channelName}:`, error);
+                }
+
                 // Se è il canale generale, invia il messaggio di benvenuto e i documenti
                 if (channelName === 'generale') {
                     console.log('Invio messaggi nel canale generale');
                     
                     // Prima parte del messaggio
-                    const welcomeMessage1 = `Ciao \${member.displayName}! 
+                    const welcomeMessage1 = `Ciao <@\${member.id}>! 
 
 Benvenuto/a all'interno di Incubator! 🚀
 
@@ -97,7 +120,6 @@ Gli step da fare per partire sono:
 ⁠3. Prenotare tramite questo link la call di onboarding direttamente con Amedeo: https://amedeopoletti.com/onboardingamedeo;
 4. Link al calendario di Simone: https://amedeopoletti.com/coach-dfy;
 5. Link al calendario di Luca: https://amedeopoletti.com/vendita-dfy;`;
-
                     // Seconda parte del messaggio
                     const welcomeMessage2 = `Intanto ti presento il team!
 
@@ -125,9 +147,13 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
                     await channel.send(welcomeMessage1);
                     await channel.send(welcomeMessage2);
                     await channel.send(welcomeMessage3);
+
                     // Carica i documenti
                     console.log('Inizio caricamento documenti nel canale generale');
                     const documentsPath = path.join(__dirname, 'templates');
+                    console.log('Path documenti:', documentsPath);
+                    console.log('Contenuto cartella:', fs.readdirSync(documentsPath));
+
                     const documents = [
                         {
                             filename: 'Business Anamnesi Pre call.docx',
@@ -174,7 +200,6 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
                         }
                     }
                 }
-
                 // Se è il canale marketing, invia il messaggio e il file KPI
                 if (channelName === 'marketing') {
                     console.log('Configurazione canale marketing');
@@ -202,6 +227,7 @@ Non esitare a contattare <@1230826624061014087>, il nostro Marketing Manager. Ri
                     const kpiFilePath = path.join(documentsPath, 'KPI Template.xlsx');
                     console.log('Tentativo invio KPI Template');
                     console.log('Percorso file KPI:', kpiFilePath);
+                    console.log('Contenuto cartella:', fs.readdirSync(documentsPath));
                     console.log('File KPI esiste:', fs.existsSync(kpiFilePath));
                     
                     if (fs.existsSync(kpiFilePath)) {
@@ -214,9 +240,11 @@ Non esitare a contattare <@1230826624061014087>, il nostro Marketing Manager. Ri
                             console.log('KPI Template inviato con successo');
                         } catch (error) {
                             console.error('Errore invio KPI Template:', error);
+                            console.error('Dettagli errore:', error.message);
                         }
                     } else {
                         console.error('File KPI Template non trovato in:', kpiFilePath);
+                        console.error('Files disponibili:', fs.readdirSync(documentsPath));
                     }
                 }
                 // Se è il canale vendita, invia il messaggio specifico
@@ -243,6 +271,7 @@ Luca Testa`;
                     const salesRoadmapPath = path.join(documentsPath, 'Roadmap Vendite Incubator.pdf');
                     console.log('Tentativo invio Roadmap Vendite');
                     console.log('Percorso Roadmap Vendite:', salesRoadmapPath);
+                    console.log('Contenuto cartella:', fs.readdirSync(documentsPath));
                     console.log('File Roadmap Vendite esiste:', fs.existsSync(salesRoadmapPath));
                     
                     if (fs.existsSync(salesRoadmapPath)) {
@@ -255,9 +284,11 @@ Luca Testa`;
                             console.log('Roadmap Vendite inviata con successo');
                         } catch (error) {
                             console.error('Errore invio Roadmap Vendite:', error);
+                            console.error('Dettagli errore:', error.message);
                         }
                     } else {
                         console.error('File Roadmap Vendite non trovato in:', salesRoadmapPath);
+                        console.error('Files disponibili:', fs.readdirSync(documentsPath));
                     }
                 }
             } catch (error) {
