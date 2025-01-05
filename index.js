@@ -92,7 +92,7 @@ client.on('guildMemberAdd', async member => {
                     console.log('Invio messaggi nel canale generale');
                     
                     // Prima parte del messaggio
-                    const welcomeMessage1 = `Ciao <@\${member.id}>! 
+                    const welcomeMessage1 = `Ciao ${member.displayName}! 
 
 Benvenuto/a all'interno di Incubator! 🚀
 
@@ -173,9 +173,6 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
                             console.log('File esiste:', fs.existsSync(filePath));
                             
                             if (fs.existsSync(filePath)) {
-                                const fileStats = fs.statSync(filePath);
-                                console.log('File dimensione:', fileStats.size, 'bytes');
-                                
                                 const attachment = new AttachmentBuilder(filePath);
                                 await channel.send({
                                     content: doc.description,
@@ -191,7 +188,7 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
                         }
                     }
                 }
-                // Se è il canale marketing, invia il messaggio e il file KPI
+                // Se è il canale marketing, invia il messaggio e i documenti
                 if (channelName === 'marketing') {
                     try {
                         console.log('Configurazione canale marketing');
@@ -220,34 +217,38 @@ Non esitare a contattare <@1230826624061014087>, il nostro Marketing Manager. Ri
                         // Aspetta 2 secondi
                         await new Promise(resolve => setTimeout(resolve, 2000));
 
-                        // Poi invia il file KPI
-                        const kpiFilePath = path.join(documentsPath, 'KPI Template.xlsx');
-                        console.log('Tentativo invio KPI Template da:', kpiFilePath);
-                        
-                        if (fs.existsSync(kpiFilePath)) {
-                            const fileStats = fs.statSync(kpiFilePath);
-                            console.log('File KPI dimensione:', fileStats.size, 'bytes');
+                        // Array dei documenti marketing
+                        const marketingDocuments = [
+                            {
+                                filename: 'KPI Template.xlsx',
+                                description: '📊 Template KPI per tracciare le tue performance'
+                            }
+                        ];
+
+                        // Invia i documenti marketing
+                        for (const doc of marketingDocuments) {
+                            const filePath = path.join(documentsPath, doc.filename);
+                            console.log('Tentativo invio documento marketing:', doc.filename);
+                            console.log('Percorso file:', filePath);
+                            console.log('File esiste:', fs.existsSync(filePath));
                             
-                            const attachment = new AttachmentBuilder(kpiFilePath, {
-                                name: 'KPI Template.xlsx',
-                                description: 'Template KPI per tracking'
-                            });
-                            
-                            await channel.send({
-                                content: '📊 **KPI Template**\nUtilizza questo file per tracciare le tue performance',
-                                files: [attachment]
-                            });
-                            console.log('KPI Template inviato con successo');
-                        } else {
-                            console.error('File KPI Template non trovato in:', kpiFilePath);
-                            console.error('Files disponibili:', fs.readdirSync(documentsPath));
+                            if (fs.existsSync(filePath)) {
+                                const attachment = new AttachmentBuilder(filePath);
+                                await channel.send({
+                                    content: doc.description,
+                                    files: [attachment]
+                                });
+                                console.log('Documento marketing inviato:', doc.filename);
+                                await new Promise(resolve => setTimeout(resolve, 1000));
+                            } else {
+                                console.error('File marketing non trovato:', filePath);
+                            }
                         }
                     } catch (error) {
                         console.error('Errore nel canale marketing:', error);
-                        console.error('Dettagli errore:', error.message);
                     }
                 }
-                // Se è il canale vendita, invia il messaggio specifico
+                // Se è il canale vendita, invia il messaggio e i documenti
                 if (channelName === 'vendita') {
                     try {
                         console.log('Configurazione canale vendita');
@@ -272,31 +273,35 @@ Luca Testa`;
                         // Aspetta 2 secondi
                         await new Promise(resolve => setTimeout(resolve, 2000));
 
-                        // Poi invia la Roadmap
-                        const salesRoadmapPath = path.join(documentsPath, 'Roadmap Vendite Incubator.pdf');
-                        console.log('Tentativo invio Roadmap Vendite da:', salesRoadmapPath);
-                        
-                        if (fs.existsSync(salesRoadmapPath)) {
-                            const fileStats = fs.statSync(salesRoadmapPath);
-                            console.log('File Roadmap dimensione:', fileStats.size, 'bytes');
+                        // Array dei documenti vendita
+                        const salesDocuments = [
+                            {
+                                filename: 'Roadmap Vendite Incubator.pdf',
+                                description: '📊 Roadmap per il processo di vendita'
+                            }
+                        ];
+
+                        // Invia i documenti vendita
+                        for (const doc of salesDocuments) {
+                            const filePath = path.join(documentsPath, doc.filename);
+                            console.log('Tentativo invio documento vendita:', doc.filename);
+                            console.log('Percorso file:', filePath);
+                            console.log('File esiste:', fs.existsSync(filePath));
                             
-                            const attachment = new AttachmentBuilder(salesRoadmapPath, {
-                                name: 'Roadmap Vendite Incubator.pdf',
-                                description: 'Roadmap per il processo di vendita'
-                            });
-                            
-                            await channel.send({
-                                content: '📊 **Roadmap Vendite**\nSegui questa roadmap per migliorare il tuo processo di vendita',
-                                files: [attachment]
-                            });
-                            console.log('Roadmap Vendite inviata con successo');
-                        } else {
-                            console.error('File Roadmap Vendite non trovato in:', salesRoadmapPath);
-                            console.error('Files disponibili:', fs.readdirSync(documentsPath));
+                            if (fs.existsSync(filePath)) {
+                                const attachment = new AttachmentBuilder(filePath);
+                                await channel.send({
+                                    content: doc.description,
+                                    files: [attachment]
+                                });
+                                console.log('Documento vendita inviato:', doc.filename);
+                                await new Promise(resolve => setTimeout(resolve, 1000));
+                            } else {
+                                console.error('File vendita non trovato:', filePath);
+                            }
                         }
                     } catch (error) {
                         console.error('Errore nel canale vendita:', error);
-                        console.error('Dettagli errore:', error.message);
                     }
                 }
             } catch (error) {
