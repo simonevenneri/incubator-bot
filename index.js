@@ -87,22 +87,6 @@ client.on('guildMemberAdd', async member => {
                 });
                 console.log(`Canale creato con successo: \${channelName}`);
 
-                // Test file upload per ogni canale
-                try {
-                    const testFilePath = path.join(__dirname, 'templates', 'test.txt');
-                    console.log(`Test upload in \${channelName}. File esiste:`, fs.existsSync(testFilePath));
-                    if (fs.existsSync(testFilePath)) {
-                        const testAttachment = new AttachmentBuilder(testFilePath);
-                        await channel.send({
-                            content: `🧪 Test file upload in \${channelName}`,
-                            files: [testAttachment]
-                        });
-                        console.log(`Test file caricato con successo in \${channelName}`);
-                    }
-                } catch (error) {
-                    console.error(`Errore test upload in \${channelName}:`, error);
-                }
-
                 // Se è il canale generale, invia il messaggio di benvenuto e i documenti
                 if (channelName === 'generale') {
                     console.log('Invio messaggi nel canale generale');
@@ -120,6 +104,7 @@ Gli step da fare per partire sono:
 ⁠3. Prenotare tramite questo link la call di onboarding direttamente con Amedeo: https://amedeopoletti.com/onboardingamedeo;
 4. Link al calendario di Simone: https://amedeopoletti.com/coach-dfy;
 5. Link al calendario di Luca: https://amedeopoletti.com/vendita-dfy;`;
+
                     // Seconda parte del messaggio
                     const welcomeMessage2 = `Intanto ti presento il team!
 
@@ -129,7 +114,6 @@ Io sono <@1230826624061014087>, il marketing manager e mi occupo di tutta la str
 <@949255449985810472> è il video editor, si occupa di tutta la parte di editing degli script.
 
 **Per chiedere delle domande ti chiediamo ti taggarci nel gruppo apposito per non perderci alcun messaggio dato che abbiamo diversi gruppi.**`;
-
                     // Terza parte del messaggio
                     const welcomeMessage3 = `📌 Nel "generale" ci saranno le discussioni generali.
 📑 Nel "documenti" ci sarà l'inserimento di tutti i documenti che servono in modo da trovarli facilmente
@@ -147,6 +131,9 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
                     await channel.send(welcomeMessage1);
                     await channel.send(welcomeMessage2);
                     await channel.send(welcomeMessage3);
+
+                    // Aspetta 2 secondi prima di inviare i documenti
+                    await new Promise(resolve => setTimeout(resolve, 2000));
 
                     // Carica i documenti
                     console.log('Inizio caricamento documenti nel canale generale');
@@ -179,31 +166,36 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
 
                     // Invia ogni documento
                     for (const doc of documents) {
-                        const filePath = path.join(documentsPath, doc.filename);
-                        console.log('Tentativo invio documento:', doc.filename);
-                        console.log('Percorso file:', filePath);
-                        console.log('File esiste:', fs.existsSync(filePath));
-                        
-                        if (fs.existsSync(filePath)) {
-                            try {
+                        try {
+                            const filePath = path.join(documentsPath, doc.filename);
+                            console.log('Tentativo invio documento:', doc.filename);
+                            console.log('Percorso file:', filePath);
+                            console.log('File esiste:', fs.existsSync(filePath));
+                            
+                            if (fs.existsSync(filePath)) {
+                                const fileStats = fs.statSync(filePath);
+                                console.log('File dimensione:', fileStats.size, 'bytes');
+                                
                                 const attachment = new AttachmentBuilder(filePath);
                                 await channel.send({
                                     content: doc.description,
                                     files: [attachment]
                                 });
                                 console.log('Documento inviato:', doc.filename);
-                            } catch (error) {
-                                console.error(`Errore invio documento \${doc.filename}:`, error);
+                                
+                                // Aspetta 1 secondo tra ogni documento
+                                await new Promise(resolve => setTimeout(resolve, 1000));
                             }
-                        } else {
-                            console.error('File non trovato:', filePath);
+                        } catch (error) {
+                            console.error(`Errore invio documento \${doc.filename}:`, error);
                         }
                     }
                 }
                 // Se è il canale marketing, invia il messaggio e il file KPI
                 if (channelName === 'marketing') {
-                    console.log('Configurazione canale marketing');
-                    const marketingMessage = `📊 Benvenuto nel canale Marketing di Incubator!
+                    try {
+                        console.log('Configurazione canale marketing');
+                        const marketingMessage = `📊 Benvenuto nel canale Marketing di Incubator!
 
 🎯 Per ottimizzare le tue campagne e monitorare i risultati, è fondamentale compilare il file KPI seguendo questa video guida:
 👉 https://www.loom.com/share/49488834370d44bd83dcafe5e5afdc39?sid=9c3990ab-9bcc-4232-a8a8-62cb67088b4a
@@ -221,36 +213,45 @@ Non esitare a contattare <@1230826624061014087>, il nostro Marketing Manager. Ri
 
 💪 Siamo qui per supportarti nel raggiungere i tuoi obiettivi di marketing!`;
 
-                    await channel.send(marketingMessage);
+                        // Prima invia il messaggio
+                        await channel.send(marketingMessage);
+                        console.log('Messaggio marketing inviato');
 
-                    // Invia il file KPI
-                    const kpiFilePath = path.join(documentsPath, 'KPI Template.xlsx');
-                    console.log('Tentativo invio KPI Template');
-                    console.log('Percorso file KPI:', kpiFilePath);
-                    console.log('Contenuto cartella:', fs.readdirSync(documentsPath));
-                    console.log('File KPI esiste:', fs.existsSync(kpiFilePath));
-                    
-                    if (fs.existsSync(kpiFilePath)) {
-                        try {
-                            const attachment = new AttachmentBuilder(kpiFilePath);
+                        // Aspetta 2 secondi
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+
+                        // Poi invia il file KPI
+                        const kpiFilePath = path.join(documentsPath, 'KPI Template.xlsx');
+                        console.log('Tentativo invio KPI Template da:', kpiFilePath);
+                        
+                        if (fs.existsSync(kpiFilePath)) {
+                            const fileStats = fs.statSync(kpiFilePath);
+                            console.log('File KPI dimensione:', fileStats.size, 'bytes');
+                            
+                            const attachment = new AttachmentBuilder(kpiFilePath, {
+                                name: 'KPI Template.xlsx',
+                                description: 'Template KPI per tracking'
+                            });
+                            
                             await channel.send({
-                                content: '📊 KPI Template',
+                                content: '📊 **KPI Template**\nUtilizza questo file per tracciare le tue performance',
                                 files: [attachment]
                             });
                             console.log('KPI Template inviato con successo');
-                        } catch (error) {
-                            console.error('Errore invio KPI Template:', error);
-                            console.error('Dettagli errore:', error.message);
+                        } else {
+                            console.error('File KPI Template non trovato in:', kpiFilePath);
+                            console.error('Files disponibili:', fs.readdirSync(documentsPath));
                         }
-                    } else {
-                        console.error('File KPI Template non trovato in:', kpiFilePath);
-                        console.error('Files disponibili:', fs.readdirSync(documentsPath));
+                    } catch (error) {
+                        console.error('Errore nel canale marketing:', error);
+                        console.error('Dettagli errore:', error.message);
                     }
                 }
                 // Se è il canale vendita, invia il messaggio specifico
                 if (channelName === 'vendita') {
-                    console.log('Configurazione canale vendita');
-                    const salesMessage = `🎯 Ciao a tutti e benvenuti nel canale Vendite di Incubator!
+                    try {
+                        console.log('Configurazione canale vendita');
+                        const salesMessage = `🎯 Ciao a tutti e benvenuti nel canale Vendite di Incubator!
 
 Mi chiamo Luca Testa e sono il Sales Manager del team. Questo canale è stato creato per supportarvi in ogni aspetto del processo di vendita: dall'impostazione delle chiamate di vendita e di setting, fino all'utilizzo del CRM per analizzare i dati e migliorare le vostre performance.
 
@@ -263,32 +264,39 @@ Di seguito trovate la roadmap con tutti i punti da seguire per implementare e mi
 Non esitate a taggarmi per qualsiasi dubbio o domanda. Ancora una volta, benvenuti a bordo e complimenti per la scelta fatta! 🚀
 
 Luca Testa`;
-                    
-                    await channel.send(salesMessage);
-                    console.log('Messaggio vendita inviato');
+                        
+                        // Prima invia il messaggio
+                        await channel.send(salesMessage);
+                        console.log('Messaggio vendita inviato');
 
-                    // Invia la Roadmap Vendite
-                    const salesRoadmapPath = path.join(documentsPath, 'Roadmap Vendite Incubator.pdf');
-                    console.log('Tentativo invio Roadmap Vendite');
-                    console.log('Percorso Roadmap Vendite:', salesRoadmapPath);
-                    console.log('Contenuto cartella:', fs.readdirSync(documentsPath));
-                    console.log('File Roadmap Vendite esiste:', fs.existsSync(salesRoadmapPath));
-                    
-                    if (fs.existsSync(salesRoadmapPath)) {
-                        try {
-                            const attachment = new AttachmentBuilder(salesRoadmapPath);
+                        // Aspetta 2 secondi
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+
+                        // Poi invia la Roadmap
+                        const salesRoadmapPath = path.join(documentsPath, 'Roadmap Vendite Incubator.pdf');
+                        console.log('Tentativo invio Roadmap Vendite da:', salesRoadmapPath);
+                        
+                        if (fs.existsSync(salesRoadmapPath)) {
+                            const fileStats = fs.statSync(salesRoadmapPath);
+                            console.log('File Roadmap dimensione:', fileStats.size, 'bytes');
+                            
+                            const attachment = new AttachmentBuilder(salesRoadmapPath, {
+                                name: 'Roadmap Vendite Incubator.pdf',
+                                description: 'Roadmap per il processo di vendita'
+                            });
+                            
                             await channel.send({
-                                content: '📊 Roadmap Vendite Incubator',
+                                content: '📊 **Roadmap Vendite**\nSegui questa roadmap per migliorare il tuo processo di vendita',
                                 files: [attachment]
                             });
                             console.log('Roadmap Vendite inviata con successo');
-                        } catch (error) {
-                            console.error('Errore invio Roadmap Vendite:', error);
-                            console.error('Dettagli errore:', error.message);
+                        } else {
+                            console.error('File Roadmap Vendite non trovato in:', salesRoadmapPath);
+                            console.error('Files disponibili:', fs.readdirSync(documentsPath));
                         }
-                    } else {
-                        console.error('File Roadmap Vendite non trovato in:', salesRoadmapPath);
-                        console.error('Files disponibili:', fs.readdirSync(documentsPath));
+                    } catch (error) {
+                        console.error('Errore nel canale vendita:', error);
+                        console.error('Dettagli errore:', error.message);
                     }
                 }
             } catch (error) {
