@@ -62,6 +62,7 @@ client.on('guildMemberAdd', async member => {
         });
 
         console.log('Categoria creata:', category.name);
+
         // Array dei canali da creare
         const channels = ['generale', 'documenti', 'marketing', 'editing', 'vendita'];
         console.log('Canali da creare:', channels);
@@ -74,14 +75,14 @@ client.on('guildMemberAdd', async member => {
         for (const channelName of channels) {
             try {
                 console.log(`Tentativo creazione canale: \${channelName}`);
-        
+
                 // Controllo per vedere se il canale esiste già
                 const existingChannel = member.guild.channels.cache.find(ch => ch.name === channelName && ch.parentId === category.id);
                 if (existingChannel) {
                     console.log(`Il canale \${channelName} esiste già. Salto la creazione.`);
                     continue; // Salta la creazione se il canale esiste già
                 }
-        
+
                 const channel = await member.guild.channels.create({
                     name: channelName,
                     type: 0,
@@ -110,10 +111,11 @@ Benvenuto/a all'interno di Incubator! 🚀
 
 Dacci conferma che tu riesca a vedere 5 canali. Questo gruppo lo utilizziamo per gli aggiornamenti con tutto il team. 
 
-Gli step da fare per partire sono: 
+Gli step da fare per partire sono:
 1. Leggi la Roadmap;
-1. Compilare il questionario "Business Anamnesi PreCall che trovi qui sotto prima della call di onboarding ed inserirlo nel canale ⁠documenti;
-2. Compilare il questionario "Marketing Strategy" che trovi qui sotto ed inserirlo nel canale documenti;
+2. Compilare il questionario "Business Anamnesi PreCall che trovi qui sotto prima della call di onboarding ed inserirlo nel canale ⁠documenti;
+3. Compilare il questionario "Marketing Strategy" che trovi qui sotto ed inserirlo nel canale documenti;
+4. Controlla i passaggi da fare nel canale "vendita";
 
 Info: Link al calendario di Simone: https://amedeopoletti.com/coach-dfy;
 Info: Link al calendario di Luca: https://amedeopoletti.com/vendita-dfy;`;
@@ -124,9 +126,11 @@ Info: Link al calendario di Luca: https://amedeopoletti.com/vendita-dfy;`;
 <@882008995919958067> è il project manager che coordina il tutto e si occupa della parte strategica
 Io sono <@1230826624061014087>, il marketing manager e mi occupo di tutta la struttura marketing, quindi per qualsiasi domanda o dubbio riguardante le campagne pubblicitarie, funnel, contenuti organici etc chiedi pure a me
 <@959471598149197854> è il sales manager, si occupa di tutta la parte di vendita
-<@949255449985810472> è il video editor, si occupa di tutta la parte di editing degli script.
+<@949255449985810472> è il video editor, si occupa di tutta la parte di editing degli script
+<@1258688333232603226> è il media buyer che si occuperà delle tue ads su Meta
 
 **Per chiedere delle domande ti chiediamo ti taggarci nel gruppo apposito per non perderci alcun messaggio dato che abbiamo diversi gruppi.**`;
+
                     // Terza parte del messaggio
                     const welcomeMessage3 = `📌 Nel "generale" ci saranno le discussioni generali.
 📑 Nel "documenti" ci sarà l'inserimento di tutti i documenti che servono in modo da trovarli facilmente
@@ -200,11 +204,12 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
                         }
                     }
                 }
+
                 // Se è il canale marketing
                 if (channelName === 'marketing') {
                     try {
                         console.log('⭐ Inizio configurazione canale marketing');
-                        const marketingMessage = `📊 Benvenuto/a nel canale Marketing!
+                        const marketingMessage = `📊 Benvenuto nel canale Marketing di Incubator!
 
 🎯 Per ottimizzare le tue campagne e monitorare i risultati, è fondamentale compilare il file KPI seguendo questa video guida:
 👉 https://www.loom.com/share/49488834370d44bd83dcafe5e5afdc39?sid=9c3990ab-9bcc-4232-a8a8-62cb67088b4a
@@ -250,21 +255,22 @@ Non esitare a contattare <@1230826624061014087>, il nostro Marketing Manager. Ri
                         console.error('Dettagli errore:', error.message);
                     }
                 }
+
                 // Se è il canale vendita
                 if (channelName === 'vendita') {
                     try {
                         console.log('⭐ Inizio configurazione canale vendita');
-                        const salesMessage = `🎯 Benvenuto/a nel canale Vendite!
+                        const salesMessage = `🎯 Ciao a tutti e benvenuti nel canale Vendite di Incubator!
 
-Mi chiamo Luca Testa e sono il Sales Manager del team. Questo canale è stato creato per supportarti in ogni aspetto del processo di vendita: dall'impostazione delle chiamate di vendita e di setting, fino all'utilizzo del CRM per analizzare i dati e migliorare le tue performance.
+Mi chiamo Luca Testa e sono il Sales Manager del team. Questo canale è stato creato per supportarvi in ogni aspetto del processo di vendita: dall'impostazione delle chiamate di vendita e di setting, fino all'utilizzo del CRM per analizzare i dati e migliorare le vostre performance.
 
-Inoltre, organizzeremo sessioni live di role play e di Q&A per aiutarti ad approcciare la vendita in maniera efficace e risolutiva. In questo canale, dovrai caricare le chiamate che farai, in modo che possano essere analizzate da me e dal team per fornirti feedback utili. Ti darò istruzioni da seguire che ci permetteranno di migliorare le tue performance e le tue offerte.  
+Inoltre, organizzeremo sessioni live di role play e di Q&A per aiutarvi ad approcciare la vendita in maniera efficace e risolutiva. In questo canale, dovrete caricare le chiamate che farete, in modo che possano essere analizzate da me e dal team per fornirvi feedback utili. Vi darò istruzioni da seguire che ci permetteranno di migliorare le vostre performance e le vostre offerte.  
 
-Sentiti libero/a di fare domande, condividere le tue esperienze o chiedere consigli. Siamo qui per aiutarti a crescere e raggiungere i tuoi obiettivi di vendita insieme!
+Sentitevi liberi di fare domande, condividere le vostre esperienze o chiedere consigli. Siamo qui per aiutarvi a crescere e raggiungere i vostri obiettivi di vendita insieme! 💪
 
-Di seguito trovi la roadmap con tutti i punti da seguire per implementare e migliorare i tuoi processi di vendita.
+Di seguito trovate la roadmap con tutti i punti da seguire per implementare e migliorare i vostri processi di vendita.
 
-Non esitare a taggarmi per qualsiasi dubbio o domanda. Ancora una volta, benvenuto/a a bordo e complimenti per la scelta fatta!
+Non esitate a taggarmi per qualsiasi dubbio o domanda. Ancora una volta, benvenuti a bordo e complimenti per la scelta fatta! 🚀
 
 Luca Testa`;
                         
@@ -318,4 +324,3 @@ client.on('error', error => {
 
 // Login del bot
 client.login(token);
-
