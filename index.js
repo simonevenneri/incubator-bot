@@ -74,6 +74,14 @@ client.on('guildMemberAdd', async member => {
         for (const channelName of channels) {
             try {
                 console.log(`Tentativo creazione canale: \${channelName}`);
+        
+                // Controllo per vedere se il canale esiste già
+                const existingChannel = member.guild.channels.cache.find(ch => ch.name === channelName && ch.parentId === category.id);
+                if (existingChannel) {
+                    console.log(`Il canale \${channelName} esiste già. Salto la creazione.`);
+                    continue; // Salta la creazione se il canale esiste già
+                }
+        
                 const channel = await member.guild.channels.create({
                     name: channelName,
                     type: 0,
@@ -103,9 +111,9 @@ Benvenuto/a all'interno di Incubator! 🚀
 Dacci conferma che tu riesca a vedere 5 canali. Questo gruppo lo utilizziamo per gli aggiornamenti con tutto il team. 
 
 Gli step da fare per partire sono: 
+1. Leggi la Roadmap;
 1. Compilare il questionario "Business Anamnesi PreCall che trovi qui sotto prima della call di onboarding ed inserirlo nel canale ⁠documenti;
 2. Compilare il questionario "Marketing Strategy" che trovi qui sotto ed inserirlo nel canale documenti;
-⁠3. Prenotare tramite questo link la call di onboarding direttamente con Amedeo: https://amedeopoletti.com/onboardingamedeo;
 
 Info: Link al calendario di Simone: https://amedeopoletti.com/coach-dfy;
 Info: Link al calendario di Luca: https://amedeopoletti.com/vendita-dfy;`;
