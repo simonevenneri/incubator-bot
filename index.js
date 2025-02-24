@@ -142,7 +142,7 @@ Io sono <@1230826624061014087>, il marketing manager e mi occupo di tutta la str
 
 Ancora complimenti per la scelta fatta e benvenuto/a!
 
-Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
+Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione`;
 
                     // Invia i messaggi uno dopo l'altro
                     await channel.send(welcomeMessage1);
