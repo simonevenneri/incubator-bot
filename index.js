@@ -72,6 +72,9 @@ client.on('guildMemberAdd', async member => {
             try {
                 console.log(`Tentativo creazione canale: ${channelName}`);
 
+                // Forza l'aggiornamento della cache dei canali per assicurarsi di avere i dati più recenti
+                await member.guild.channels.fetch(); 
+                
                 // Verifica esistenza canale nella categoria
                 const existingChannel = member.guild.channels.cache.filter(ch => ch.parentId === category.id).find(ch => ch.name === channelName);
                 console.log(`Verifica esistenza canale ${channelName}: ${existingChannel ? 'Esiste' : 'Non esiste'}`);
@@ -147,10 +150,7 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione`;
                     await new Promise(resolve => setTimeout(resolve, 2000));
 
                     // Carica i documenti
-                    console.log('Inizio caricamento documenti nel canale generale');
                     const documentsPath = path.join(__dirname, 'templates');
-                    console.log('Contenuto cartella:', fs.readdirSync(documentsPath));
-
                     const documents = [
                         { filename: 'Business Anamnesi Pre call.docx', description: '📋 Business Anamnesi Pre call' },
                         { filename: 'Marketing Strategy.docx', description: '🎯 Marketing Strategy' },
@@ -163,8 +163,6 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione`;
                     for (const doc of documents) {
                         try {
                             const filePath = path.join(documentsPath, doc.filename);
-                            console.log('Tentativo invio documento:', doc.filename);
-
                             if (fs.existsSync(filePath)) {
                                 const attachment = new AttachmentBuilder(filePath);
                                 await channel.send({ content: doc.description, files: [attachment] });
@@ -202,9 +200,7 @@ Non esitare a contattare <@1230826624061014087>, il nostro Marketing Manager. Ri
                     console.log('✅ Messaggio marketing inviato');
 
                     // Tenta di inviare il file KPI
-                    const kpiFilePath = path.join(documentsPath, 'KPI Template.xlsx');
-                    console.log('📁 Tentativo invio KPI Template da:', kpiFilePath);
-
+                    const kpiFilePath = path.join(__dirname, 'templates', 'KPI Template.xlsx');
                     if (fs.existsSync(kpiFilePath)) {
                         const attachment = new AttachmentBuilder(kpiFilePath);
                         await channel.send({
@@ -216,8 +212,6 @@ Non esitare a contattare <@1230826624061014087>, il nostro Marketing Manager. Ri
                         console.error('❌ File KPI non trovato:', kpiFilePath);
                     }
                 }
-
-                // Altri canali, come editing o vendita, possono essere configurati nello stesso modo...
             } catch (error) {
                 console.error(`Errore nella gestione del canale ${channelName}:`, error);
                 console.error('Dettagli errore:', error.message);
