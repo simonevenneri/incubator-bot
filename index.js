@@ -66,32 +66,35 @@ client.on('guildMemberAdd', async member => {
         // Array dei canali da creare
         const channels = ['generale', 'documenti', 'marketing', 'editing', 'vendita'];
         console.log('Canali da creare:', channels);
-
-        // Ciclo per creare i canali nella categoria
+        
+        // Definisci documentsPath qui, fuori dai blocchi if
+        const documentsPath = path.join(__dirname, 'templates');
+        console.log('Path documenti globale:', documentsPath);
+        
+        // Crea ogni canale nella categoria
         for (const channelName of channels) {
             try {
                 console.log(`Tentativo creazione canale: \${channelName}`);
-                
-                // Controllo per vedere se il canale esiste già nella categoria
+
+                // Controllo per vedere se il canale esiste già
                 const existingChannel = member.guild.channels.cache.find(ch => ch.name === channelName && ch.parentId === category.id);
                 if (existingChannel) {
-                    console.log(`Il canale "\${channelName}" esiste già. Salto la creazione.`);
+                    console.log(`Il canale \${channelName} esiste già. Salto la creazione.`);
                     continue; // Salta la creazione se il canale esiste già
                 }
 
-                // Creazione del canale
                 const channel = await member.guild.channels.create({
                     name: channelName,
-                    type: 0, // Tipo: Testo
+                    type: 0,
                     parent: category.id,
                     permissionOverwrites: [
                         {
                             id: member.guild.id,
-                            deny: [PermissionFlagsBits.ViewChannel] // Nascondi a tutti
+                            deny: [PermissionFlagsBits.ViewChannel]
                         },
                         {
                             id: member.user.id,
-                            allow: [PermissionFlagsBits.ViewChannel] // Mostra al membro
+                            allow: [PermissionFlagsBits.ViewChannel]
                         }
                     ]
                 });
@@ -108,14 +111,14 @@ Benvenuto/a all'interno di Incubator! 🚀
 
 Dacci conferma che tu riesca a vedere 5 canali. Questo gruppo lo utilizziamo per gli aggiornamenti con tutto il team. 
 
-Gli step da fare per partire sono: 
-1. Leggere la Roadmap;
+Gli step da fare per partire sono:
+1. Leggi la Roadmap;
 2. Compilare il questionario "Business Anamnesi PreCall che trovi qui sotto prima della call di onboarding ed inserirlo nel canale ⁠documenti;
 3. Compilare il questionario "Marketing Strategy" che trovi qui sotto ed inserirlo nel canale documenti;
 4. Controlla i passaggi da fare nel canale "vendita";
 
-Link al calendario di Simone: https://amedeopoletti.com/coach-dfy;
-Link al calendario di Luca: https://amedeopoletti.com/vendita-dfy;`;
+Info: Link al calendario di Simone: https://amedeopoletti.com/coach-dfy;
+Info: Link al calendario di Luca: https://amedeopoletti.com/vendita-dfy;`;
 
                     // Seconda parte del messaggio
                     const welcomeMessage2 = `Intanto ti presento il team!
@@ -123,7 +126,7 @@ Link al calendario di Luca: https://amedeopoletti.com/vendita-dfy;`;
 <@882008995919958067> è il project manager che coordina il tutto e si occupa della parte strategica
 Io sono <@1230826624061014087>, il marketing manager e mi occupo di tutta la struttura marketing, quindi per qualsiasi domanda o dubbio riguardante le campagne pubblicitarie, funnel, contenuti organici etc chiedi pure a me
 <@959471598149197854> è il sales manager, si occupa di tutta la parte di vendita
-<@949255449985810472> è il video editor, si occupa di tutta la parte di editing degli script.
+<@949255449985810472> è il video editor, si occupa di tutta la parte di editing degli script
 <@1258688333232603226> è il media buyer che si occuperà delle tue ads su Meta
 
 **Per chiedere delle domande ti chiediamo ti taggarci nel gruppo apposito per non perderci alcun messaggio dato che abbiamo diversi gruppi.**`;
@@ -139,7 +142,7 @@ Io sono <@1230826624061014087>, il marketing manager e mi occupo di tutta la str
 
 Ancora complimenti per la scelta fatta e benvenuto/a!
 
-Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione.`;
+Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione`;
 
                     // Invia i messaggi uno dopo l'altro
                     await channel.send(welcomeMessage1);
