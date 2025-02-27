@@ -68,7 +68,7 @@ client.on('guildMemberAdd', async member => {
         console.log('Canali da creare:', channels);
 
         // Eseguiamo fetch completo dei canali per ottenere dati freschi
-        await member.guild.channels.fetch();
+        await member.guild.channels.fetch(); 
 
         // Crea ogni canale nella categoria
         for (const channelName of channels) {
