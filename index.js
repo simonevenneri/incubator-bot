@@ -36,12 +36,12 @@ client.on('guildMemberAdd', async member => {
 
         // Verifica se l'utente è già stato processato
         const existingCategory = member.guild.channels.cache.find(
-            ch => ch.type === 4 && ch.name === `\${member.displayName} - Incubator Premium`
+            ch => ch.type === 4 && ch.name === `${member.displayName} - Incubator Premium`
         );
 
         // Se esiste già una categoria per questo utente, non fare nulla
         if (existingCategory) {
-            console.log(`Categoria già esistente per l'utente \${member.displayName}`);
+            console.log(`Categoria già esistente per l'utente ${member.displayName}`);
             return;
         }
 
@@ -74,12 +74,15 @@ client.on('guildMemberAdd', async member => {
         // Crea ogni canale nella categoria
         for (const channelName of channels) {
             try {
-                console.log(`Tentativo creazione canale: \${channelName}`);
+                console.log(`Tentativo creazione canale: ${channelName}`);
 
-                // Controllo per vedere se il canale esiste già
+                // Controllo per vedere se il canale esiste già nella categoria
+                await member.guild.channels.fetch(); // Forza l'aggiornamento della cache dei canali
                 const existingChannel = member.guild.channels.cache.find(ch => ch.name === channelName && ch.parentId === category.id);
+                console.log(`Verifica esistenza canale ${channelName}: ${existingChannel ? 'Esiste' : 'Non esiste'}`);
+
                 if (existingChannel) {
-                    console.log(`Il canale \${channelName} esiste già. Salto la creazione.`);
+                    console.log(`Il canale ${channelName} esiste già. Salto la creazione.`);
                     continue; // Salta la creazione se il canale esiste già
                 }
 
@@ -98,7 +101,7 @@ client.on('guildMemberAdd', async member => {
                         }
                     ]
                 });
-                console.log(`Canale creato con successo: \${channelName}`);
+                console.log(`Canale creato con successo: ${channelName}`);
 
                 // Se è il canale generale, invia il messaggio di benvenuto e i documenti
                 if (channelName === 'generale') {
@@ -200,7 +203,7 @@ Per qualsiasi domanda o dubbio rimaniamo tutti a disposizione`;
                                 await new Promise(resolve => setTimeout(resolve, 1000));
                             }
                         } catch (error) {
-                            console.error(`Errore invio documento \${doc.filename}:`, error);
+                            console.error(`Errore invio documento ${doc.filename}:`, error);
                         }
                     }
                 }
@@ -303,7 +306,7 @@ Luca Testa`;
                     }
                 }
             } catch (error) {
-                console.error(`Errore nella gestione del canale \${channelName}:`, error);
+                console.error(`Errore nella gestione del canale ${channelName}:`, error);
                 console.error('Dettagli errore:', error.message);
                 if (error.code) console.error('Codice errore:', error.code);
             }
