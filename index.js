@@ -70,7 +70,7 @@ client.on('guildMemberAdd', async member => {
         // Eseguiamo fetch completo dei canali per ottenere dati freschi
         await member.guild.channels.fetch();
 
-        // Pulizia dei canali esistenti
+        // Pulizia dei canali esistenti nella categoria
         const existingChannels = member.guild.channels.cache.filter(ch => ch.parentId === category.id);
         for (const existingChannel of existingChannels.values()) {
             console.log(`Rimozione canale esistente: ${existingChannel.name}`);
