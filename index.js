@@ -45,7 +45,7 @@ client.on('guildMemberAdd', async member => {
             return;
         }
 
-        // Se non esiste, procedi con la creazione
+        // Se non esiste, procedi con la creazione della categoria
         const category = await member.guild.channels.create({
             name: member.displayName + " - Incubator Premium",
             type: 4,
@@ -67,16 +67,16 @@ client.on('guildMemberAdd', async member => {
         const channels = ['generale', 'documenti', 'marketing', 'editing', 'vendita'];
         console.log('Canali da creare:', channels);
 
+        // Eseguiamo fetch completo dei canali per ottenere dati freschi
+        await member.guild.channels.fetch();
+
         // Crea ogni canale nella categoria
         for (const channelName of channels) {
             try {
                 console.log(`Tentativo creazione canale: ${channelName}`);
 
-                // Forza l'aggiornamento della cache dei canali per assicurarsi di avere i dati più recenti
-                await member.guild.channels.fetch(); 
-                
-                // Verifica esistenza canale nella categoria
-                const existingChannel = member.guild.channels.cache.filter(ch => ch.parentId === category.id).find(ch => ch.name === channelName);
+                // Verifica se il canale esiste già nella categoria
+                const existingChannel = member.guild.channels.cache.find(ch => ch.name === channelName && ch.parentId === category.id);
                 console.log(`Verifica esistenza canale ${channelName}: ${existingChannel ? 'Esiste' : 'Non esiste'}`);
 
                 if (existingChannel) {
